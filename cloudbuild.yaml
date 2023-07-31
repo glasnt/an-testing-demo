@@ -14,9 +14,13 @@ steps:
   - name: "ubuntu"
     script: | 
       #!/bin/bash
-      pwd
+      echo "pwd: $(pwd)"
+      echo "Directory Listing"
       ls
-      git status
+      echo "\nDirectory Listing (with hidden files)"
+      ls -la
+
+      #git status
 
 
   
