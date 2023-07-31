@@ -15,7 +15,7 @@ steps:
     name: ubuntu
     script: |
         #!/bin/bash
-        CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+        CHANGED_FOLDERS=$(cat _changed_files  | grep '/' | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
 
         echo "Changed files:"
         cat _changed_files
