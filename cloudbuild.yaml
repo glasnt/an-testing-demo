@@ -21,7 +21,7 @@ steps:
         echo "COMMIT_SHA: $COMMIT_SHA"
         echo "REVISION_ID: $REVISION_ID"
         echo "REPO_NAME: $REPO_NAME"
-        echo "REPO_FULL_NAME: $REPO_FULL_NAME"
+        echo ""
         echo "BRANCH_NAME: $BRANCH_NAME"
         echo "TAG_NAME: $TAG_NAME"
         echo "REF_NAME: $REF_NAME"
@@ -49,9 +49,9 @@ steps:
     name: gcr.io/cloud-builders/git
     args: ['remote', '-v']
 
- # - id: unshallow
- #   name: gcr.io/cloud-builders/git
- #   args: ['fetch', '--unshallow']
+  - id: unshallow
+    name: gcr.io/cloud-builders/git
+    args: ['fetch', '--unshallow']
 
   - id: "git inspect"
     name: "ubuntu"
@@ -66,6 +66,11 @@ steps:
       echo ""
 
       git log --oneline
+
+      git branch
+
+      git diff master...${BRANCH_NAME}
+
 
   - name: "ubuntu"
     script: |
