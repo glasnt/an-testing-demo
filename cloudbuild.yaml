@@ -1,28 +1,57 @@
 steps: 
 
-  - name: "ubuntu"
-    entrypoint: /bin/bash
-    args: 
-      - -c
-      - | 
-        echo "Identification step"
-        env
-
-  - name: "ubuntu"
+  - id: "env-list"
+    name: "ubuntu"
     args: ["env"]
+  
+  - id: "substitutions"
+    entrypoint: "/bin/bash"
+    args: 
+      - -c 
+      - |
+        echo "Default substitutions"
+        echo "PROJECT_ID: $PROJECT_ID"
+        echo "PROJECT_NUMBER: $PROJECT_NUMBER"
+        echo "BUILD_ID: $BUILD_ID"
+        echo "LOCATION: $LOCATION"
 
-  - name: "ubuntu"
+        echo ""
+        echo "Trigger substitutions"
+        echo "TRIGGER_NAME: $TRIGGER_NAME"
+        echo "COMMIT_SHA: $COMMIT_SHA"
+        echo "REVISION_ID: $REVISION_ID"
+        echo "REPO_NAME: $REPO_NAME"
+        echo "BRANCH_NAME: $BRANCH_NAME"
+        echo "TAG_NAME: $TAG_NAME"
+        echo "REF_NAME: $REF_NAME"
+        echo "TRIGGER_BUILD_CONFIG_PATH: $TRIGGER_BUILD_CONFIG_PATH"
+
+
+        echo ""
+        echo "GitHub-specific substitutions"
+        echo "_HEAD_BRANCH: $_HEAD_BRANCH"
+        echo "_BASE_BRANCH: $_BASE_BRANCH"
+        echo "_HEAD_REPO_URL: $_HEAD_REPO_URL"
+        echo "_PR_NUMBER: $_PR_NUMBER"
+
+
+  - id: "directory" 
+    name: "ubuntu"
     script: | 
       #!/bin/bash
       echo "pwd: $(pwd)"
       echo "Directory Listing"
       ls
-      echo "\nDirectory Listing (with hidden files)"
+      echo "Directory Listing (with hidden files)"
       ls -la
 
-      #git status
+  - id: "git inspect"
+    name: "ubuntu"
+    script: | 
+      #!/bin/bash
+      apt-get update && apt-get install git -y
 
-
+      git show
   
   - name: "ubuntu"
     script: | 
