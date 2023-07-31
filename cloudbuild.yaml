@@ -18,7 +18,7 @@ steps:
         CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
 
         echo "Changed files:"
-        echo $CHANGED_FILES
+        cat _changed_files
         echo ""
         echo "Changed folders:"
         echo $CHANGED_FOLDERS
@@ -31,5 +31,7 @@ steps:
     name: python:slim
     script: |
       #!/bin/bash
-      pip install -r requirements.txt
+      pip install -r requirements.txt -U pip
+
+      echo pytest $(cat _changed_folders)
       pytest $(cat _changed_folders)
