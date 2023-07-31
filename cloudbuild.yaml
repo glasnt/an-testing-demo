@@ -52,6 +52,12 @@ steps:
 
       git show
 
+      echo ""
+      echo ""
+      echo ""
+
+      git log
+
   - name: "ubuntu"
     script: |
       #!/bin/bash
