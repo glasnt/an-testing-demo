@@ -1,45 +1,31 @@
 steps:
-  - id: "env-list"
-    name: "ubuntu"
-    args: ["env"]
-
-  - id: "check substitutions"
-    name: "ubuntu"
-    entrypoint: "/bin/bash"
-    args:
-      - -c
-      - |
-        echo "Default substitutions"
-        echo "PROJECT_ID: $PROJECT_ID"
-        echo "PROJECT_NUMBER: $PROJECT_NUMBER"
-        echo "BUILD_ID: $BUILD_ID"
-        echo "LOCATION: $LOCATION"
-
-        echo ""
-        echo "Trigger substitutions"
-        echo "TRIGGER_NAME: $TRIGGER_NAME"
-        echo "COMMIT_SHA: $COMMIT_SHA"
-        echo "REVISION_ID: $REVISION_ID"
-        echo "REPO_NAME: $REPO_NAME"
-        echo ""
-        echo "BRANCH_NAME: $BRANCH_NAME"
-        echo "TAG_NAME: $TAG_NAME"
-        echo "REF_NAME: $REF_NAME"
-        echo "TRIGGER_BUILD_CONFIG_PATH: $TRIGGER_BUILD_CONFIG_PATH"
-
-
-        echo ""
-        echo "GitHub-specific substitutions"
-        echo "_HEAD_BRANCH: $_HEAD_BRANCH"
-        echo "_BASE_BRANCH: $_BASE_BRANCH"
-        echo "_HEAD_REPO_URL: $_HEAD_REPO_URL"
-        echo "_PR_NUMBER: $_PR_NUMBER"
-
-
   - id: unshallow
     name: gcr.io/cloud-builders/git
     args: ['fetch', '--unshallow']
 
   - id: diff
     name: gcr.io/cloud-builders/git
-    args: ['diff', 'origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH}']
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
+
+  - id: pytest
+    name: python:slim
+    env:
+      - PR_NUMBER=${_PR_NUMBER}
+      - BASE_BRANCH=${_BASE_BRANCH}
+      - HEAD_BRANCH=${_HEAD_BRANCH}
+    script: |
+      pip install -r requirements.txt
+
+      echo "Files changed in PR $PR_NUMBER (origin/${BASE_BRANCH}..origin/${HEAD_BRANCH}):"
+      cat _changed_files
+
+      CHANGED_FOLDERS=$(cat _changed_files | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+
+      echo "Changes folders: $CHANGED_FOLDERS"
+
+      echo "Going to run: pytest $CHANGED_FOLDERS"
+      pytest $CHANGED_FOLDERS
