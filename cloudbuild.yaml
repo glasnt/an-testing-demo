@@ -9,7 +9,7 @@ steps:
     args:
       - -c
       - |
-        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} > _changed_files
+        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
 
   - id: pytest
     name: python:slim
@@ -23,7 +23,9 @@ steps:
       echo "Files changed in PR $PR_NUMBER (origin/${BASE_BRANCH}..origin/${HEAD_BRANCH}):"
       cat _changed_files
 
-      CHANGED_FOLDERS=$(git diff latest..try-tests --name-only | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+      CHANGED_FOLDERS=$(cat _changed_files | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+
+      echo "Changes folders: $CHANGED_FOLDERS"
 
       echo "Going to run: pytest $CHANGED_FOLDERS"
       pytest $CHANGED_FOLDERS
