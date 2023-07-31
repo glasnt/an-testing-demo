@@ -7,6 +7,18 @@ steps:
       - | 
         echo "Identification step"
         env
+
+  - name: "ubuntu"
+    args: ["env"]
+
+  - name: "ubuntu"
+    entrypoint: /bin/bash
+    script: | 
+      pwd
+      ls
+      git status
+
+
   
   - name: "ubuntu"
     script: | 
