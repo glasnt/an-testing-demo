@@ -1,1 +1,1 @@
-B file, in Folder Three. Single line. 
+B file, in Folder Three. Single line. Edited. 
