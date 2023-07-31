@@ -44,6 +44,11 @@ steps:
       echo "Directory Listing (with hidden files)"
       ls -la
 
+
+  - id: unshallow
+    name: gcr.io/cloud-builders/git
+    args: ['fetch', '--unshallow']
+
   - id: "git inspect"
     name: "ubuntu"
     script: |
