@@ -32,4 +32,4 @@ steps:
     script: |
       #!/bin/bash
       pip install -r requirements.txt
-      pytest $(echo _changed_folders)
+      pytest $(cat _changed_folders)
