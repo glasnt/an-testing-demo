@@ -13,10 +13,8 @@ steps:
 
   - id: process
     name: ubuntu
-    args:
-      - -c
-      - |
-        #!bin/bash
+    script: |
+        #!/bin/bash
         CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
 
         echo "Changed files:"
