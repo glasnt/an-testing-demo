@@ -27,13 +27,9 @@ steps:
 
   # Now, do the work:
 
-  - id: pip install
-    name: python:slim
-    entrypoint: python
-    args: ["-m", "pip", "install", "-r", "requirements.txt"]
-
   - id: pytest
     name: python:slim
     script: |
       #!/bin/bash
+      pip install -r requirements.txt
       pytest $(echo _changed_folders)
