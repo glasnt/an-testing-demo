@@ -5,15 +5,19 @@ steps:
 
   - id: diff
     name: gcr.io/cloud-builders/git
-    args: ['diff', 'origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH}', '>', '_changed_files']
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} > _changed_files
 
   - id: pytest
     name: python:slim
-    env: 
+    env:
       - PR_NUMBER=${_PR_NUMBER}
       - BASE_BRANCH=${_BASE_BRANCH}
       - HEAD_BRANCH=${_HEAD_BRANCH}
-    script: | 
+    script: |
       pip install -r requirements.txt
 
       echo "Files changed in PR $PR_NUMBER (origin/${BASE_BRANCH}..origin/${HEAD_BRANCH}):"
