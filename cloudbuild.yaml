@@ -5,7 +5,7 @@ steps:
 
   - id: diff
     name: gcr.io/cloud-builders/git
-    args: ['diff', 'origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH}', '> _changed_files']
+    args: ['diff', 'origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH}', '>', '_changed_files']
 
   - id: pytest
     name: python:slim
