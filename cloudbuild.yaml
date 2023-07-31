@@ -35,48 +35,16 @@ steps:
         echo "_HEAD_REPO_URL: $_HEAD_REPO_URL"
         echo "_PR_NUMBER: $_PR_NUMBER"
 
-  - id: "directory"
-    name: "ubuntu"
-    script: |
-      #!/bin/bash
-      echo "pwd: $(pwd)"
-      echo "Directory Listing"
-      ls
-      echo "Directory Listing (with hidden files)"
-      ls -la
-
-  - id: "remote"
-    name: gcr.io/cloud-builders/git
-    args: ['remote', '-v']
 
   - id: unshallow
     name: gcr.io/cloud-builders/git
     args: ['fetch', '--unshallow']
 
-  - id: "git inspect"
-    name: "ubuntu"
-    script: |
-      #!/bin/bash
-      apt-get update && apt-get install git -y
 
-      git show
-
-      echo ""
-      echo ""
-      echo ""
-
-      git log --oneline
-
-      git branch
-
-      git diff master...${BRANCH_NAME}
+  - id: diff
+    name: gcr.io/cloud-builders/git
+    args: ['diff', '${_MAIN_BRANCH_NAME}..${BRANCH_NAME}']
 
 
-  - name: "ubuntu"
-    script: |
-      #!/bin/bash
-
-      for i in $(ls -d */); do
-        ls $i
-      done
-
+substitutions:
+  _MAIN_BRANCH_NAME: latest
