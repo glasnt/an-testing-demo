@@ -40,11 +40,9 @@ steps:
     name: gcr.io/cloud-builders/git
     args: ['fetch', '--unshallow']
 
-
   - id: diff
     name: gcr.io/cloud-builders/git
-    args: ['diff', '${_MAIN_BRANCH_NAME}..${BRANCH_NAME}']
-
+    args: ['diff', 'origin/${_MAIN_BRANCH_NAME}..origin${BRANCH_NAME}']
 
 substitutions:
   _MAIN_BRANCH_NAME: latest
