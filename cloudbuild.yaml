@@ -12,8 +12,8 @@ steps:
     args: ["env"]
 
   - name: "ubuntu"
-    entrypoint: /bin/bash
     script: | 
+      #!/bin/bash
       pwd
       ls
       git status
