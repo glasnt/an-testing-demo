@@ -74,9 +74,3 @@ steps:
         ls $i
       done
 
-
-substitutions:
-  _PR_NUMBER: ""
-  _HEAD_BRANCH: ""
-  _HEAD_REPO_URL: ""
-  _BASE_BRANCH: ""
