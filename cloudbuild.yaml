@@ -9,16 +9,23 @@ steps:
     args:
       - -c
       - |
-        CHANGED_FILES=$(git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only)
-        CHANGED_FOLDERS=$(echo $CHANGED_FILES  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
 
-        echo "Changed files:"
-        echo $CHANGED_FILES
-        echo ""
-        echo "Changed folders:"
-        echo $CHANGED_FOLDERS
+  - id: process
+    name: gcr.io/cloud-builders/git
+    script: |
+      #!bin/bash
+      CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
 
-        echo CHANGED_FOLDERS > _changed_folders
+      echo "Changed files:"
+      echo $CHANGED_FILES
+      echo ""
+      echo "Changed folders:"
+      echo $CHANGED_FOLDERS
+
+      echo CHANGED_FOLDERS > _changed_folders
+
+# Now, do the work: 
 
   - id: pip install
     name: python:slim
