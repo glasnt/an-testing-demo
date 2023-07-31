@@ -23,7 +23,7 @@ steps:
         echo "Changed folders:"
         echo $CHANGED_FOLDERS
 
-        echo CHANGED_FOLDERS > _changed_folders
+        echo $CHANGED_FOLDERS > _changed_folders
 
   # Now, do the work:
 
