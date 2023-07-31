@@ -9,23 +9,24 @@ steps:
     args:
       - -c
       - |
-        git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
+        CHANGED_FILES=$(git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only)
+        CHANGED_FOLDERS=$(echo $CHANGED_FILES  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+
+        echo "Changed files:"
+        echo $CHANGED_FILES
+        echo ""
+        echo "Changed folders:"
+        echo $CHANGED_FOLDERS
+
+        echo CHANGED_FOLDERS > _changed_folders
+
+  - id: pip install
+    name: python:slim
+    entrypoint: python
+    args: ["-m", "pip", "install", "-r", "requirements.txt"]
 
   - id: pytest
     name: python:slim
-    env:
-      - PR_NUMBER=${_PR_NUMBER}
-      - BASE_BRANCH=${_BASE_BRANCH}
-      - HEAD_BRANCH=${_HEAD_BRANCH}
     script: |
-      pip install -r requirements.txt
-
-      echo "Files changed in PR $PR_NUMBER (origin/${BASE_BRANCH}..origin/${HEAD_BRANCH}):"
-      cat _changed_files
-
-      CHANGED_FOLDERS=$(cat _changed_files | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
-
-      echo "Changes folders: $CHANGED_FOLDERS"
-
-      echo "Going to run: pytest $CHANGED_FOLDERS"
-      pytest $CHANGED_FOLDERS
+      #!/bin/bash
+      python -m pytest $(echo _changed_folders)
