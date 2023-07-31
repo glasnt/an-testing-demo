@@ -36,4 +36,4 @@ steps:
     name: python:slim
     script: |
       #!/bin/bash
-      python -m pytest $(echo _changed_folders)
+      pytest $(echo _changed_folders)
