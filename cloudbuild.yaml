@@ -1,7 +1,7 @@
 steps:
   - id: unshallow
     name: gcr.io/cloud-builders/git
-    args: ['fetch', '--unshallow']
+    args: ["fetch", "--unshallow"]
 
   - id: diff
     name: gcr.io/cloud-builders/git
@@ -13,19 +13,21 @@ steps:
 
   - id: process
     name: ubuntu
-    script: |
-      #!bin/bash
-      CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
+    args:
+      - -c
+      - |
+        #!bin/bash
+        CHANGED_FOLDERS=$(cat _changed_files  | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
 
-      echo "Changed files:"
-      echo $CHANGED_FILES
-      echo ""
-      echo "Changed folders:"
-      echo $CHANGED_FOLDERS
+        echo "Changed files:"
+        echo $CHANGED_FILES
+        echo ""
+        echo "Changed folders:"
+        echo $CHANGED_FOLDERS
 
-      echo CHANGED_FOLDERS > _changed_folders
+        echo CHANGED_FOLDERS > _changed_folders
 
-# Now, do the work: 
+  # Now, do the work:
 
   - id: pip install
     name: python:slim
