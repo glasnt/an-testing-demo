@@ -56,7 +56,7 @@ steps:
       echo ""
       echo ""
 
-      git log
+      git log --oneline
 
   - name: "ubuntu"
     script: |
