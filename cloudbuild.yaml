@@ -1,0 +1,17 @@
+steps: 
+
+  - name: "ubuntu"
+    entrypoint: /bin/bash
+    args: 
+      - -c
+      - | 
+        echo "Identification step"
+        env
+  
+  - name: "ubuntu"
+    script: | 
+      #!/bin/bash
+
+      for i in $(ls -d */); do
+        ls $i
+      done
