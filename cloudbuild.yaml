@@ -1,29 +1,17 @@
 steps:
-  - id: unshallow
-    name: gcr.io/cloud-builders/git
-    args: ["fetch", "--unshallow"]
-
-  - id: diff
+  - id: retrieve delta
     name: gcr.io/cloud-builders/git
     entrypoint: bash
-    args:
+    args: 
       - -c
-      - |
+      - | 
+        git fetch --unshallow
         git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
+        cat _changed_files  | grep '/' | cut -d '/' -f1 | sort | uniq | tr '\n' ' ' > _changed_folders
 
-  - id: process
-    name: ubuntu
-    script: |
-        #!/bin/bash
-        CHANGED_FOLDERS=$(cat _changed_files  | grep '/' | cut -d '/' -f1 | sort | uniq | tr '\n' ' ')
-
-        echo "Changed files:"
-        cat _changed_files
-        echo ""
-        echo "Changed folders:"
-        echo $CHANGED_FOLDERS
-
-        echo $CHANGED_FOLDERS > _changed_folders
+        echo "Change files: \n" && cat _changed_files
+        echo "Change folders: \n" && cat _changed_folders
+        
 
   # Now, do the work:
 
