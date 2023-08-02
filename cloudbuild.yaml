@@ -9,8 +9,9 @@ steps:
         git diff origin/${_BASE_BRANCH}..origin/${_HEAD_BRANCH} --name-only > _changed_files
         cat _changed_files  | grep '/' | cut -d '/' -f1 | sort | uniq | tr '\n' ' ' > _changed_folders
 
-        echo "Change files: \n" && cat _changed_files
-        echo "Change folders: \n" && cat _changed_folders
+        echo "Change files:" && cat _changed_files
+        echo "Change folders:" && cat _changed_folders
+        echo "EOF"
         
 
   # Now, do the work:
@@ -20,6 +21,4 @@ steps:
     script: |
       #!/bin/bash
       pip install -r requirements.txt -U pip
-
-      echo pytest $(cat _changed_folders)
       pytest $(cat _changed_folders)
